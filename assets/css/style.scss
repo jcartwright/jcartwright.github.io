@@ -12,3 +12,91 @@
 #header_wrap .inner {
   text-align: center;
 }
+
+.services {
+  display: flex;
+
+  & > .service-summary-wrapper {
+    border-right: 1px solid #C0C0C0;
+  }
+
+  & > :last-child {
+    border: none;
+  }
+
+  .service-summary-wrapper {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem;
+
+    .service-icon img {
+      width: 50px;
+      border: none;
+    }
+
+    .service-summary {
+      font-size: 0.9rem;
+
+      .quote {
+        font-size: 0.8rem;
+        font-style: italic;
+        color: #606060;
+      }
+
+      .author {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #606060;
+      }
+    }
+  }
+}
+
+.testimonials {
+  display: flex;
+
+  .testimonial-wrapper {
+    flex: 1;
+    padding: 1.5rem;
+    background-color: #e6f0ff;
+
+    .testimonial {
+      padding: 0.5rem;
+      background-color: #fff;
+      border: 1px solid #b3d1ff;
+
+      .quote {
+        font-size: 0.9rem;
+      }
+
+      .author-wrapper {
+        display: flex;
+        border-top: 1px dashed #b3d1ff;
+        margin-top: 1rem;
+        font-weight: 600;
+      }
+
+      .author {
+        flex: 3;
+        padding: 1.25rem 0.5rem;
+        text-align: left;
+
+        .title {
+          font-size: 0.85rem;
+          font-weight: 300;
+          color: #606060;
+        }
+      }
+
+      .avatar {
+        flex: 2;
+        text-align: center;
+
+        img {
+          width: 80px;
+          border-radius: 100%;
+        }
+      }
+    }
+  }
+}
