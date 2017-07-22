@@ -16,17 +16,17 @@
 title: Ensight Enterprises, LLC
 email: jason@ensightenterprises.com
 description: > # this means to ignore newlines until "baseurl:"
-  Ensight Enterprises provides businesses with technology consulting services
+  Ensight Enterprises provides businesses with software consulting services
   including custom application development, product management, and project
   mangement. We primarily serve startup and early stage companies who need
   technical guidance to execute on their vision and get their product to market.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://www.ensightenterprises.com" # the base hostname & protocol
 twitter_username: iamenspired
-github_username:  jcartwright
-github:
-  owner_name: "Jason Cartwright"
-  owner_url: "https://github.com/jcartwright"
+# github_username:  jcartwright
+# github:
+#   owner_name: "Jason Cartwright"
+#   owner_url: "https://github.com/jcartwright"
 
 # Build settings
 markdown: kramdown

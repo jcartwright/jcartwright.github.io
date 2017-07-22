@@ -2,3 +2,13 @@
 ---
 
 @import "jekyll-theme-slate";
+
+#header_wrap {
+  background: url('../images/hero_1920x500.jpg') #0090ff no-repeat;
+  background-attachment: fixed;
+  background-position: 70% -13%;
+}
+
+#header_wrap .inner {
+  text-align: center;
+}
