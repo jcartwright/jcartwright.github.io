@@ -60,10 +60,10 @@ layout: home
       Design is how it works."</span>
       <div class="author">~ Steve Jobs</div>
       <hr />
-      Good design goes beyond aesthetics. User experience is how a person feels
-      when interfacing with an application. UX includes such things as ease of use,
-      perception of the value of the system, utility, efficiency in performing
-      tasks and so forth.
+      Good design goes beyond aesthetics. User Experience (UX) is how a person
+      feels when using your application. UX includes such things as ease of use,
+      perception of value, utility, and efficiency in performing the
+      <em>"Job to be Done"</em>.
     </span>
   </div>
 </div>
