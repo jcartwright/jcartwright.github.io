@@ -15,49 +15,45 @@ defmodule CompsAPI.Payments.Events do
   alias CompsAPI.SendGrid.Mailer
 
   @doc """
-  Gets an event by id
+  Handle a Stripe.Event
   """
-  def get_event(id) when is_binary(id) do
-    Event.retrieve(id)
-  end
-
-  @doc """
-  Gets an event for the given Stripe.Event
-  """
-  def get_event(%Event{id: id}), do: get_event(id)
-
-  @doc """
-  Handle an event based on id and type
-  """
-  def handle_event(%Event{id: id}) do
+  def handle_event(%Event{id: event_id}) do
     ## Retrieve the event from Stripe to ensure it's legit
-    with {:ok, %Event{} = event} <- get_event(id),
-         :ok <- handle_event(event.type, event)
-    do
-      Logger.info("Handled Event[#{event.id}]: #{event.type}")
-      {:ok, event.id}
+    with {:ok, %Event{} = event} <- get_event(event_id) do
+      case process_event(event) do
+        {:ok, processed_event} ->
+          Logger.info("Handled Event[#{processed_event.id}]: #{processed_event.type}")
+          {:ok, processed_event}
+
+        _ -> :noop
+      end
     else
       {:error, %Stripe.Error{} = error} ->
         if Mix.env != :test do
           Logger.warn(error.message)
         end
         {:error, error}
-      _ -> :noop
     end
   end
 
-  defp handle_event("customer.subscription.created", event) do
+  def get_event(%Event{id: event_id}),
+    do: get_event(event_id)
+
+  def get_event(event_id) when is_binary(event_id),
+    do: Event.retrieve(event_id)
+
+  defp process_event(event = %{type: "customer.subscription.created"}) do
     with {:ok, %User{} = user} <- get_user_for_event(event),
          {:ok, %Subscription{} = subscription} <- get_object_for_event(event)
     do
       Mailer.trial_started_email(user, subscription)
       |> Mailer.deliver_later()
 
-      :ok
+      {:ok, event}
     end
   end
 
-  defp handle_event("customer.subscription.deleted", event) do
+  defp process_event(event = %{type: "customer.subscription.deleted"}) do
     with {:ok, %User{} = user} <- get_user_for_event(event) do
       user
       |> Mailer.canceled_email()
@@ -66,11 +62,11 @@ defmodule CompsAPI.Payments.Events do
       {:ok, _customer} = Customers.delete_customer(user)
       {:ok, _user} = Accounts.set_user_deleted(user)
 
-      :ok
+      {:ok, event}
     end
   end
 
-  defp handle_event("customer.subscription.trial_will_end", event) do
+  defp process_event(event = %{type: "customer.subscription.trial_will_end"}) do
     with {:ok, %User{} = user} <- get_user_for_event(event),
          {:ok, %Subscription{} = subscription} <- get_object_for_event(event)
     do
@@ -81,11 +77,11 @@ defmodule CompsAPI.Payments.Events do
         |> Mailer.deliver_later()
       end
 
-      :ok
+      {:ok, event}
     end
   end
 
-  defp handle_event("customer.subscription.updated", event) do
+  defp process_event(event = %{type: "customer.subscription.updated"}) do
     with {:ok, %User{} = user} <- get_user_for_event(event),
          {:ok, %Subscription{} = subscription} <- get_object_for_event(event)
     do
@@ -95,21 +91,21 @@ defmodule CompsAPI.Payments.Events do
       end
     end
 
-    :ok
+    {:ok, event}
   end
 
-  defp handle_event("invoice.payment_failed", event) do
+  defp process_event(event = %{type: "invoice.payment_failed"}) do
     with {:ok, %User{} = user} <- get_user_for_event(event),
          {:ok, %Invoice{} = invoice} <- get_object_for_event(event)
     do
       Mailer.payment_failed_email(user, invoice)
       |> Mailer.deliver_later()
 
-      :ok
+      {:ok, event}
     end
   end
 
-  defp handle_event("invoice.payment_succeeded", event) do
+  defp process_event(event = %{type: "invoice.payment_succeeded"}) do
     with {:ok, %User{} = user} <- get_user_for_event(event),
          {:ok, %Invoice{} = invoice} <- get_object_for_event(event)
     do
@@ -118,11 +114,11 @@ defmodule CompsAPI.Payments.Events do
         |> Mailer.deliver_later()
       end
 
-      :ok
+      {:ok, event}
     end
   end
 
-  defp handle_event(_, event) do
+  defp process_event(event) do
     Logger.info("Unhandled Event[#{event.id}]: #{event.type}")
     :noop
   end
