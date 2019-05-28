@@ -19,17 +19,18 @@ my recent work.
 [stripity_stripe][1] is an open source hex package that wraps Stripe's API for
 Elixir. I've used it in the [PocketComps](#pocket_comps) application for
 recurring subscription payment processing. I'm now leveraging it for a very
-different use case that requires Stripe's Issuing Service, which issues and
-manages virtual cards for proxy payments.
+different use case that requires [Stripe's Issuing Service][10], which issues
+and manages physical cards and virtual cards for proxy payments.
 
 Since Stripe Issuing is a fairly new service, the existing [stripity_stripe][1]
 package does not have support for it. Rather than creating my own wrapper, I
 prefer to leverage an existing open-source option, and contribute that work to
 the community.
 
-I've got an open [pull request][2] that I'm reviewing with the maintainers that
-illustrates how I work with existing codebases to match the style and
-organization. Here is an excerpt from my pull request.
+I've got ~~an open~~ a merged [pull request][2] that adds support for
+Stripe Issuing to the stripity_stripe package. This illustrates how I
+collaborate with the maintainers and work with existing codebases to match the
+style and organization. Here is an excerpt from my pull request.
 
 <a id="issuing_card"></a>
 {% include_relative excerpts/card_ex_short.md %}
@@ -191,3 +192,4 @@ contributing back to the Elixir community.
 [7]: https://projecteuler.net/problem=54
 [8]: https://github.com/bencheeorg/benchee
 [9]: https://github.com/emilybache/Yatzy-Refactoring-Kata/tree/master/elixir
+[10]: https://stripe.com/docs/issuing
